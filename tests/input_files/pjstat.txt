@@ -1,0 +1,4 @@
+Wisteria/BDEC-01 scheduled stop time: 2024/11/22(Fri) 09:00:00 (Remain:  1days 20:52:40)
+
+JOB_ID       JOB_NAME   STATUS  PROJECT    RSCGROUP          START_DATE        ELAPSE     ELAPSE_LIM       TOKEN           NODE  GPU REASON
+5315177      test       RUNNING gd55       debug-o           11/20 12:07:19<   00:00:01   00:01:00           0.0              1    - -

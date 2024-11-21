@@ -1,0 +1,147 @@
+Wisteria/BDEC-01 scheduled stop time: 2024/11/22(Fri) 09:00:00 (Remain:  1days 20:48:37)
+
+[Job Statistical Information]
+ JOB ID                                     : 5159251
+ SUB JOB NUM                                : -
+ START BULKNO                               : -
+ END BULKNO                                 : -
+ HOST NAME                                  : wisteria05
+ JOB NAME                                   : test
+ JOB TYPE                                   : BATCH
+ JOB MODEL                                  : NM
+ USER                                       : d55000
+ PROJECT                                    : -
+ RESOURCE UNIT                              : unit1
+ RESOURCE GROUP                             : debug-o
+ APRIORITY                                  : 127 <DEFAULT>
+ PRIORITY                                   : 127 <DEFAULT>
+ SHELL                                      : /bin/bash
+ MAIL SEND FLAG                             : ----
+ MAIL ADDRESS                               : d55000
+ STEP DEPENDENCY EXP                        :
+ FILE MASK                                  : 0027
+ STANDARD OUT FILE                          : /work/02/gd55/d55000/test/graphene_band/test.5159251.out
+ STANDARD ERR FILE                          : /work/02/gd55/d55000/test/graphene_band/test.5159251.out
+ INFORMATION FILE                           :
+ PJSUB DIRECTORY                            : /work/02/gd55/d55000/test/graphene_band
+ FILE SYSTEM NAME                           :
+ APPLICATION NAME                           : :submitted on wisteria05:Power info not send
+ NUMA POLICY                                : 0
+ SPECIFIED JOB START DATE                   : -
+ AUTO RESTART                               : yes
+ MPI PROC (REQUIRE)                         : 1
+ MPI PROC (ALLOC)                           : 1
+ MPI STATIC PROC (REQUIRE)                  : 1
+ MPI STATIC PROC (ALLOC)                    : 1
+ PROC CPU LIMIT                             : unlimited <DEFAULT>
+ PROC COREFILE LIMIT                        : 0.0 MB (0) <DEFAULT>
+ PROC CREATE PROCESS LIMIT                  : 2048 <DEFAULT>
+ PROC DATA LIMIT                            : unlimited <DEFAULT>
+ PROC LOCKED MEMORY LIMIT                   : unlimited <DEFAULT>
+ PROC MESSAGE QUEUE LIMIT                   : unlimited <DEFAULT>
+ PROC OPEN FILES LIMIT                      : 1048576 <DEFAULT>
+ PROC PENDING SIGNAL LIMIT                  : unlimited <DEFAULT>
+ PROC PERMFILE LIMIT                        : unlimited <DEFAULT>
+ PROC STACK LIMIT                           : unlimited <DEFAULT>
+ PROC VIRTUAL MEMORY LIMIT                  : unlimited <DEFAULT>
+ COMMENT                                    :
+ SUPPLEMENTARY INFORMATION                  :
+ RETRY NUM                                  : 0
+ LAST STATE                                 : RUNOUT
+ STATE                                      : END
+ BACKFILL                                   : 1
+ ACCEPT DATE                                : 2024/10/28 17:04:52
+ QUEUED DATE                                : 2024/10/28 17:04:52
+ PRO START DATE                             : 2024/10/28 17:04:57
+ PRO END DATE                               : 2024/10/28 17:04:57
+ JOB START DATE                             : 2024/10/28 17:04:57
+ JOB END DATE                               : 2024/10/28 17:05:06
+ EPI START DATE                             : 2024/10/28 17:05:08
+ EPI END DATE                               : 2024/10/28 17:05:08
+ EXIT DATE                                  : 2024/10/28 17:05:13
+ JOB DELETE DATE (REQUIRE)                  : -
+ JOB DELETE DATE                            : -
+ ALL PREC SUBJOB EXIT DATE                  : -
+ HOLD TIME                                  : 0
+ LAST HOLD USER                             : -
+ HOLD NUM                                   : 0
+ PRM DATE                                   : 2024/10/28 17:05:08
+ AFFECTED NODE ID                           : -
+ EXIT CODE                                  : 0
+ SIGNAL NO                                  : -
+ PJM CODE                                   : 0
+ REASON                                     : -
+ PRO EXIT CODE                              : 0
+ EPI EXIT CODE                              : 0
+ ELAPSE TIME (LIMIT)                        : 00:10:00 (600)
+ ELAPSE TIME (USE)                          : 00:00:10 (10)
+ USER CPU TIME (USE)                        : 6160 ms
+ SYSTEM CPU TIME (USE)                      : 630 ms
+ CPU TIME (TOTAL)                           : 6790 ms
+ MEMORY SIZE (LIMIT)                        : unlimited <DEFAULT>
+ MEMORY SIZE (ALLOC)                        : unlimited
+ MAX MEMORY SIZE (USE)                      : 251.2 MiB (263323648)
+ VNODE MEMORY SIZE (LIMIT)                  : -
+ VNODE MEMORY SIZE (ALLOC)                  : -
+ VNODE MAX MEMORY SIZE (USE)                : -
+ CPU NUM (REQUIRE)                          : 48 <DEFAULT>
+ CPU NUM (ALLOC)                            : 48
+ CPU NUM (USE)                              : 6
+ TOFU USER COMM RECV BYTE                   : 0.0 MB (0)
+ TOFU USER COMM SEND BYTE                   : 0.0 MB (0)
+ TOFU SYSTEM COMM RECV BYTE                 : 21.5 MB (21448640)
+ TOFU SYSTEM COMM SEND BYTE                 : 4.1 MB (4094368)
+ FJ PROFILER                                : -
+ SECTOR CACHE                               : -
+ INTRA NODE BARRIER                         : -
+ AVG POWER CONSUMPTION OF CORES/CMG (IDEAL) : (0)24.878855 (1)24.750058 (2)22.501500 (3)24.751650
+ MAX POWER CONSUMPTION OF CORES/CMG (IDEAL) : (0)24.878855 (1)24.750058 (2)22.501500 (3)24.751650
+ MIN POWER CONSUMPTION OF CORES/CMG (IDEAL) : (0)24.878855 (1)24.750058 (2)22.501500 (3)24.751650
+ ENERGY CONSUMPTION OF CORES/CMG (IDEAL)    : (0)0.081397 (1)0.080975 (2)0.073619 (3)0.080981
+ AVG POWER CONSUMPTION OF L2CACHE/CMG (IDEAL) : (0)1.495261 (1)1.443698 (2)1.437718 (3)1.437723
+ MAX POWER CONSUMPTION OF L2CACHE/CMG (IDEAL) : (0)1.495261 (1)1.443698 (2)1.437718 (3)1.437723
+ MIN POWER CONSUMPTION OF L2CACHE/CMG (IDEAL) : (0)1.495261 (1)1.443698 (2)1.437718 (3)1.437723
+ ENERGY CONSUMPTION OF L2CACHE/CMG (IDEAL)  : (0)0.004892 (1)0.004723 (2)0.004704 (3)0.004704
+ AVG POWER CONSUMPTION OF MEM/CMG (IDEAL)   : (0)1.752685 (1)1.750074 (2)1.750117 (3)1.750138
+ MAX POWER CONSUMPTION OF MEM/CMG (IDEAL)   : (0)1.752685 (1)1.750074 (2)1.750117 (3)1.750138
+ MIN POWER CONSUMPTION OF MEM/CMG (IDEAL)   : (0)1.752685 (1)1.750074 (2)1.750117 (3)1.750138
+ ENERGY CONSUMPTION OF MEM/CMG (IDEAL)      : (0)0.005734 (1)0.005726 (2)0.005726 (3)0.005726
+ AVG POWER CONSUMPTION OF TOFU (IDEAL)      : 4.937829
+ MAX POWER CONSUMPTION OF TOFU (IDEAL)      : 4.937829
+ MIN POWER CONSUMPTION OF TOFU (IDEAL)      : 4.937829
+ ENERGY CONSUMPTION OF TOFU (IDEAL)         : 0.016155
+ AVG POWER CONSUMPTION OF CPU PERIPHERALS (IDEAL) : 0.312521
+ MAX POWER CONSUMPTION OF CPU PERIPHERALS (IDEAL) : 0.312521
+ MIN POWER CONSUMPTION OF CPU PERIPHERALS (IDEAL) : 0.312521
+ ENERGY CONSUMPTION OF CPU PERIPHERALS (IDEAL) : 0.001022
+ AVG POWER CONSUMPTION OF OPTICAL MODULE (IDEAL) : 0.937562
+ MAX POWER CONSUMPTION OF OPTICAL MODULE (IDEAL) : 0.937562
+ MIN POWER CONSUMPTION OF OPTICAL MODULE (IDEAL) : 0.937562
+ ENERGY CONSUMPTION OF OPTICAL MODULE (IDEAL) : 0.003067
+ AVG POWER CONSUMPTION OF PCI-E (IDEAL)     : -
+ MAX POWER CONSUMPTION OF PCI-E (IDEAL)     : -
+ MIN POWER CONSUMPTION OF PCI-E (IDEAL)     : -
+ ENERGY CONSUMPTION OF PCI-E (IDEAL)        : -
+ AVG POWER CONSUMPTION OF NODE (IDEAL)      : 115.004439
+ MAX POWER CONSUMPTION OF NODE (IDEAL)      : 115.004439
+ MIN POWER CONSUMPTION OF NODE (IDEAL)      : 115.004439
+ ENERGY CONSUMPTION OF NODE (IDEAL)         : 0.376263
+ AVG POWER CONSUMPTION OF NODE (MEASURED)   : 109.041318
+ MAX POWER CONSUMPTION OF NODE (MEASURED)   : 109.041318
+ MIN POWER CONSUMPTION OF NODE (MEASURED)   : 109.041318
+ ENERGY CONSUMPTION OF NODE (MEASURED)      : 0.356753
+ UTILIZATION INFO OF POWER API              : 0
+ POWER CONSUMPTION STATE                    : 1
+ POWER CONSUMPTION MEASURE START DATE       : 2024/10/28 17:04:57
+ POWER CONSUMPTION MEASURE END DATE         : 2024/10/28 17:05:08
+ NODE NUM (REQUIRE)                         : 1:noncont
+ NODE NUM (ALLOC)                           : 1:noncont
+ NODE NUM (USE)                             : 1
+ NODE NUM (UNUSED)                          : 0
+ NODE ID (USE)                              : 0x0107000B
+ TOFU COORDINATE (USE)                      : (0,0,5)
+ NODE ID (RANK)                             : 0x0107000B(0)
+ jobenv (REQUIRE)                           : linux <DEFAULT>
+ jobenv (ALLOC)                             : linux
+ jobenv (USE)                               : -
+ TOKEN                                      : 0.0
