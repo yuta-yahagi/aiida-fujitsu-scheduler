@@ -47,7 +47,7 @@ class GPUJobResource(PbsJobResource):
     """Job resources class for GPU machine."""
 
     
-    _default_fields = super()._default_fields + ['num_gpu']
+    _default_fields = tuple(list(PbsJobResource._default_fields)+['num_gpu'])
     if TYPE_CHECKING:
         num_gpu: int
 
@@ -89,8 +89,9 @@ class FujitsuScheduler(Scheduler):
         The output text is just retrieved, and returned for logging purposes.
         """
         # Max history days is 31
-        raise f'pjstat -H --hday 31 -s {escape_for_bash(job_id)}'# for instance f'tracejob -v {escape_for_bash(job_id)}'
-
+        return f'pjstat -H --hday 31 -s {escape_for_bash(job_id)}'# for instance f'tracejob -v {escape_for_bash(job_id)}'
+        # return f'pjstat -H --hday 31 -s {job_id}'
+    
     def _get_submit_script_header(self, job_tmpl):
         """Return the submit script final part, using the parameters from the job template.
 
@@ -174,8 +175,12 @@ class FujitsuScheduler(Scheduler):
                     f'max_memory_kb must be a positive integer (in kB)! It is instead `{job_tmpl.max_memory_kb}`'
                 )
             # node-mem: Specify the real memory required per node in KiB.
-            mem_KiB=int(physical_memory_kb/1.024)
-            lines.append(f'#PJM -L node-mem={mem_KiB}Ki')
+            mem_MiB=physical_memory_kb//1024
+            if mem_MiB < 1024:
+                self.logger.info(f'Memory allocation should be learger than 1 GiB ({mem_MiB}MiB) -> set to 1 GiB')
+                mem_MiB=1024
+
+            lines.append(f'#PJM -L node-mem={mem_MiB}')
 
         if job_tmpl.custom_scheduler_commands:
             lines.append(job_tmpl.custom_scheduler_commands)
@@ -378,7 +383,7 @@ class FujitsuScheduler(Scheduler):
             lines=lines[ibegin+1:]
             exitline=None
             for l in lines:
-                if l.beginwith(' EXIT CODE '):
+                if l.startswith(' EXIT CODE '):
                     break
             if exitline is None:
                 raise ValueError('the `detailed_job_info.stdout` does not contain the exit code.')
