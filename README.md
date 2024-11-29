@@ -11,6 +11,8 @@ This plugin is the default output of the
 [AiiDA plugin cutter](https://github.com/aiidateam/aiida-plugin-cutter),
 intended to help developers get started with their AiiDA plugins.
 
+!!!!! Documentation is under construction !!!!!!
+
 ## Repository contents
 
 * [`.github/`](.github/): [Github Actions](https://github.com/features/actions) configuration
