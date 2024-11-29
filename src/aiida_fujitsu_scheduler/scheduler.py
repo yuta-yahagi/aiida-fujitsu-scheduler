@@ -9,7 +9,7 @@ from aiida.common.escaping import escape_for_bash
 from aiida.common import exceptions
 from aiida.common.lang import type_check
 from aiida.schedulers import Scheduler, SchedulerError, SchedulerParsingError
-from aiida.schedulers.datastructures import JobInfo, JobResource, JobState
+from aiida.schedulers.datastructures import JobInfo, JobResource, JobState, JobTemplateCodeInfo
 from aiida.schedulers.plugins.pbsbaseclasses import PbsJobResource
 
 _LOGGER = logging.getLogger(__name__)
@@ -155,6 +155,25 @@ class FujitsuScheduler(Scheduler):
 
         if job_tmpl.job_resource.tot_num_mpiprocs > 1:
             lines.append(f'#PJM --mpi proc={job_tmpl.job_resource.tot_num_mpiprocs}')
+
+
+        # for codeinfo in job_tmpl.codes_info:
+        #     self.logger.debug(f'codeinfo.cmdline_params={codeinfo.cmdline_params}')
+        #     print(codeinfo.cmdline_params)
+        #     if codeinfo.cmdline_params[0]=='mpiexec':
+        #         # mpiexec is used
+        #         if codeinfo.stdout_name:
+        #             # mpiexec codes > stdout_name
+        #             codeinfo.cmdline_params.append('-ofout')
+        #             codeinfo.cmdline_params.append(codeinfo.stdout_name)
+        #             codeinfo.stdout_name=None
+        #         if codeinfo.stderr_name:
+        #             codeinfo.cmdline_params.append('-oferr')
+        #             codeinfo.cmdline_params.append(codeinfo.stderr_name)
+        #             codeinfo.stderr_name=None
+        #     self.logger.debug(f'codeinfo.cmdline_params={codeinfo.cmdline_params}')
+        #     print(codeinfo.cmdline_params)
+                
         
         if job_tmpl.job_resource.num_cores_per_machine is not None:
             num_cores_per_proc = job_tmpl.job_resource.num_cores_per_machine // job_tmpl.job_resource.num_mpiprocs_per_machine
@@ -186,6 +205,29 @@ class FujitsuScheduler(Scheduler):
             lines.append(job_tmpl.custom_scheduler_commands)
         
         return '\n'.join(lines)
+    
+    from aiida.common.datastructures import CodeRunMode
+    def _get_run_line(self, codes_info: list[JobTemplateCodeInfo], codes_run_mode: CodeRunMode) -> str:
+        # mpiexec is not support redirection of output
+        # need to replace: -ofout <stdout_name>
+        runlines = super()._get_run_line(codes_info, codes_run_mode)
+        print(runlines)
+        tmpl=[]
+        for line in runlines.split('\n\n'):
+            if 'mpiexec' in line:
+                if '> ' in line:
+                    #  > stdout_name TO -ofout stdout_name
+                    line=line.replace('> ', "'-ofout '")
+                if '2> ' in line:
+                    # 2> stderr_name TO -oferr stderr_name
+                    line=line.replace('2> ', "'-oferr '")
+                if '2>&1 ' in line:
+                    # 2>&1 TO -oferr stdout_name
+                    line=line.replace('-ofout','-of').replace('2>&1 ', ' ')
+                    
+        tmpl.append(line)
+        print(tmpl)
+        return '\n\n'.join(tmpl)
 
     def _get_submit_command(self, submit_script):
         """Return the string to execute to submit a given script.
