@@ -215,17 +215,50 @@ class FujitsuScheduler(Scheduler):
         tmpl=[]
         for line in runlines.split('\n\n'):
             if 'mpiexec' in line:
-                if '> ' in line:
-                    #  > stdout_name TO -ofout stdout_name
-                    line=line.replace('> ', "'-ofout '")
-                if '2> ' in line:
-                    # 2> stderr_name TO -oferr stderr_name
-                    line=line.replace('2> ', "'-oferr '")
-                if '2>&1 ' in line:
-                    # 2>&1 TO -oferr stdout_name
-                    line=line.replace('-ofout','-of').replace('2>&1 ', ' ')
-                    
-        tmpl.append(line)
+                outfile=None
+                errfile=None
+                joinfile=False
+                tmpline=[]
+                splitline=line.replace("'",'').split(' ')
+                skip_next=False
+                for i, l in enumerate(splitline):
+                    if skip_next:
+                        skip_next=False
+                        continue
+                    if l == '>':
+                        outfile=splitline[i+1]
+                        skip_next=True
+                        continue
+                    if l == '2>':
+                        errfile=splitline[i+1]
+                        skip_next=True
+                        continue
+                    if l == '2>&1':
+                        joinfile=True
+                        continue
+                    tmpline.append(l)
+                new_lines=[]
+                for l in tmpline:
+                    new_lines.append(l)
+                    if l == 'mpiexec':
+                        if joinfile:
+                            new_lines.append('-of')
+                            if outfile:
+                                new_lines.append(outfile)
+                            elif errfile:
+                                new_lines.append(errfile)
+                            else:
+                                raise ValueError('mpiexec with 2>&1 should have stdout or stderr')
+                            continue
+                        if outfile:
+                            new_lines.append('-ofout')
+                            new_lines.append(outfile)
+                        if errfile:
+                            new_lines.append('-oferr')
+                            new_lines.append(errfile)
+                tmpl.append(' '.join(new_lines))
+            else:                   
+                tmpl.append(line)
         print(tmpl)
         return '\n\n'.join(tmpl)
 
