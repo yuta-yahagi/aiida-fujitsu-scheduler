@@ -29,7 +29,7 @@ def test_run(add_code=None):
     builder.metadata.options.withmpi = True
     builder.metadata.options.resources = {
         "num_machines": 1,
-        "num_mpiprocs_per_machine": 2
+        "num_mpiprocs_per_machine": 1
     }
     builder.metadata.options.account = "gd55"
     builder.metadata.options.queue_name = "debug-o"
@@ -37,9 +37,9 @@ def test_run(add_code=None):
     # Note: in order to submit your calculation to the aiida daemon, do:
     # from aiida.engine import submit
     # future = submit(CalculationFactory('fujitsu_scheduler'), **inputs)
-    result = engine.run(builder)
-
-    print(f"Computed diff between files: \n{result}")
+    result,pk = engine.run_get_pk(builder)
+    print(f"pk = <{pk}>")
+    print(f"results = \n{result}")
 
 
 @click.command()

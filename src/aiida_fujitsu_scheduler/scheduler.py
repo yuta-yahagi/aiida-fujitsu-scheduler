@@ -156,24 +156,57 @@ class FujitsuScheduler(Scheduler):
         if job_tmpl.job_resource.tot_num_mpiprocs > 1:
             lines.append(f'#PJM --mpi proc={job_tmpl.job_resource.tot_num_mpiprocs}')
 
-
+        # # print all attributes of job_tmpl.job_resource for debugging
         # for codeinfo in job_tmpl.codes_info:
-        #     self.logger.debug(f'codeinfo.cmdline_params={codeinfo.cmdline_params}')
-        #     print(codeinfo.cmdline_params)
-        #     if codeinfo.cmdline_params[0]=='mpiexec':
-        #         # mpiexec is used
-        #         if codeinfo.stdout_name:
-        #             # mpiexec codes > stdout_name
-        #             codeinfo.cmdline_params.append('-ofout')
-        #             codeinfo.cmdline_params.append(codeinfo.stdout_name)
-        #             codeinfo.stdout_name=None
-        #         if codeinfo.stderr_name:
-        #             codeinfo.cmdline_params.append('-oferr')
-        #             codeinfo.cmdline_params.append(codeinfo.stderr_name)
-        #             codeinfo.stderr_name=None
-        #     self.logger.debug(f'codeinfo.cmdline_params={codeinfo.cmdline_params}')
-        #     print(codeinfo.cmdline_params)
-                
+        #     for attr in dir(codeinfo):
+        #         print(f'codeinfo.{attr}={getattr(codeinfo, attr)}')
+
+        for codeinfo in job_tmpl.codes_info:
+            use_mpiexec=False
+            for i,l in enumerate(codeinfo.prepend_cmdline_params):
+                if 'mpiexec' in l:
+                    use_mpiexec=True
+                    mpiexec_index=i
+                    break
+            if not use_mpiexec:
+                continue
+            # mpiexec is used
+            self.logger.info("mpiexec is found -> will use -ofout/-oferr option if needed.")
+
+            # Check if the computer uses double quotes because mpiexec does not support single quotes
+            computer_use_double_quotes = codeinfo.use_double_quotes[0]
+            if not computer_use_double_quotes:
+                self.logger.warning('Single quotes is not suppoted in mpiexec. Use double quotes.')
+
+            # We need to replace pipline optputs to mpiexec option (-ofout/-oferr)
+            stdout_name=codeinfo.stdout_name
+            stderr_name=codeinfo.stderr_name
+            if not stdout_name and not stderr_name:
+                # Nothing to do
+                continue
+            if stderr_name:
+                # set stdout_name=None to not use '2>' in the command line
+                codeinfo.stderr_name=None
+            if stdout_name:
+                # set stdout_name=None to not use '>' in the command line
+                codeinfo.stdout_name=None
+            should_join=codeinfo.join_files
+            if should_join:
+                if stdout_name:
+                    tmp_params=['-of',stdout_name]
+                elif stderr_name:
+                    tmp_params=['-of',stderr_name]
+                else:
+                    raise ValueError('stdout_name or stderr_name is required')
+            else:
+                tmp_params=[]
+                if stdout_name:
+                    tmp_params.extend(['-ofout',stdout_name])
+                if stderr_name:
+                    tmp_params.extend(['-oferr',stderr_name])
+            codeinfo.prepend_cmdline_params[mpiexec_index+1:mpiexec_index+1]=tmp_params
+            self.logger.debug("prepend params: ",codeinfo.prepend_cmdline_params)
+            self.logger.debug("cmdline params:",codeinfo.cmdline_params)
         
         if job_tmpl.job_resource.num_cores_per_machine is not None:
             num_cores_per_proc = job_tmpl.job_resource.num_cores_per_machine // job_tmpl.job_resource.num_mpiprocs_per_machine
@@ -206,62 +239,15 @@ class FujitsuScheduler(Scheduler):
         
         return '\n'.join(lines)
     
-    from aiida.common.datastructures import CodeRunMode
-    def _get_run_line(self, codes_info: list[JobTemplateCodeInfo], codes_run_mode: CodeRunMode) -> str:
-        # mpiexec is not support redirection of output
-        # need to replace: -ofout <stdout_name>
-        runlines = super()._get_run_line(codes_info, codes_run_mode)
-        print(runlines)
-        tmpl=[]
-        for line in runlines.split('\n\n'):
-            if 'mpiexec' in line:
-                outfile=None
-                errfile=None
-                joinfile=False
-                tmpline=[]
-                splitline=line.replace("'",'').split(' ')
-                skip_next=False
-                for i, l in enumerate(splitline):
-                    if skip_next:
-                        skip_next=False
-                        continue
-                    if l == '>':
-                        outfile=splitline[i+1]
-                        skip_next=True
-                        continue
-                    if l == '2>':
-                        errfile=splitline[i+1]
-                        skip_next=True
-                        continue
-                    if l == '2>&1':
-                        joinfile=True
-                        continue
-                    tmpline.append(l)
-                new_lines=[]
-                for l in tmpline:
-                    new_lines.append(l)
-                    if l == 'mpiexec':
-                        if joinfile:
-                            new_lines.append('-of')
-                            if outfile:
-                                new_lines.append(outfile)
-                            elif errfile:
-                                new_lines.append(errfile)
-                            else:
-                                raise ValueError('mpiexec with 2>&1 should have stdout or stderr')
-                            continue
-                        if outfile:
-                            new_lines.append('-ofout')
-                            new_lines.append(outfile)
-                        if errfile:
-                            new_lines.append('-oferr')
-                            new_lines.append(errfile)
-                tmpl.append(' '.join(new_lines))
-            else:                   
-                tmpl.append(line)
-        print(tmpl)
-        return '\n\n'.join(tmpl)
-
+    ### FOR DEBUGGING ########
+    # from aiida.common.datastructures import CodeRunMode
+    # def _get_run_line(self, codes_info: list[JobTemplateCodeInfo], codes_run_mode: CodeRunMode) -> str:
+    #     # mpiexec is not support redirection of output
+    #     # need to replace: -ofout <stdout_name>
+    #     runlines = super()._get_run_line(codes_info, codes_run_mode)
+    #     print(runlines)
+    #     return runlines
+    
     def _get_submit_command(self, submit_script):
         """Return the string to execute to submit a given script.
 
