@@ -1,0 +1,16 @@
+append_text: ''
+computer: wisteria-o
+default_calc_job_plugin: quantumespresso.pw
+description: Quantum Espresso in Wisteria-Odyssey
+filepath_executable: pw.x
+label: pw
+prepend_text: 'module load fj
+
+  module load fjmpi
+
+  module load fftw
+
+  module load mpi-fftw
+
+  module load qe/6.5'
+use_double_quotes: 'True'

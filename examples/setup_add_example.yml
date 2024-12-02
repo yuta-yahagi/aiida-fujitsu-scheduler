@@ -1,0 +1,7 @@
+append_text: ''
+default_calc_job_plugin: core.arithmetic.add
+description: Test code
+filepath_executable: /bin/bash
+label: add
+prepend_text: ''
+use_double_quotes: 'True'
