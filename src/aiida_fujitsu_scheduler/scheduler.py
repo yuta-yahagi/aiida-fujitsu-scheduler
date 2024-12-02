@@ -153,7 +153,7 @@ class FujitsuScheduler(Scheduler):
         if getattr(job_tmpl.job_resource, 'num_gpu', None):
             lines.append(f'#PJM -L gpu={job_tmpl.job_resource.num_gpu}')
 
-        if job_tmpl.job_resource.tot_num_mpiprocs > 1:
+        if job_tmpl.job_resource.tot_num_mpiprocs > 0:
             lines.append(f'#PJM --mpi proc={job_tmpl.job_resource.tot_num_mpiprocs}')
 
         # # print all attributes of job_tmpl.job_resource for debugging
@@ -444,12 +444,17 @@ class FujitsuScheduler(Scheduler):
             lines=lines[ibegin+1:]
             exitline=None
             for l in lines:
-                if l.startswith(' EXIT CODE '):
+                if l.split(":")[0].strip()=='EXIT CODE':
+                    exitline=l
                     break
             if exitline is None:
                 raise ValueError('the `detailed_job_info.stdout` does not contain the exit code.')
 
-            exit_code=int(exitline.split(':')[1].strip())
+            exit_code=exitline.split(':')[1].strip()
+            if exit_code.isdigit():
+                exit_code=int(exit_code)
+            else:
+                return None
 
             if exit_code == 29:
                 return CalcJob.exit_codes.ERROR_SCHEDULER_NODE_FAILURE
