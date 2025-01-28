@@ -3,6 +3,7 @@
 import datetime
 import logging
 from typing import TYPE_CHECKING
+from copy import deepcopy
 import re
 
 from aiida.common.escaping import escape_for_bash
@@ -293,8 +294,19 @@ class FujitsuScheduler(Scheduler):
         headers=lines[iheader].split()
         jobdata_raw = []
         for l in lines[iheader+1:]:
-            vals=re.split(r'\s{2,}', l)
-            jobdata_raw.append(dict(zip(headers, vals)))
+            ### The following code is for the case that the output is separated by multiple spaces
+            ### It crashes when the output is separated by a single space, like "...  RUNNING gd55  ..." 
+            # vals=re.split(r'\s{2,}', l)
+            vals=l.split()
+            header_copy=deepcopy(headers)
+            tmp_dict={}
+            for i in range(len((headers))):
+                header=header_copy.pop()
+                v=vals.pop()
+                if header == "START_DATE":
+                    v += " " + vals.pop()
+                tmp_dict[header]=v
+            jobdata_raw.append(tmp_dict)
 
         job_list=[]
         for row in jobdata_raw:
