@@ -343,7 +343,7 @@ class FujitsuScheduler(Scheduler):
             if row.get('START_DATE') is not None:
                 t_line=row['START_DATE']
                 if '<' in t_line:
-                    t_line.replace('<','')
+                    t_line=t_line.replace('<','')
                 time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M:%S')
                 this_year=datetime.datetime.now().year
                 this_job.dispatch_time = time_obj.replace(year=this_year)
@@ -352,9 +352,15 @@ class FujitsuScheduler(Scheduler):
                 this_job.dispatch_time = None
 
             if row.get('ELAPSE') is not None:
-                time_obj = datetime.datetime.strptime(row['ELAPSE'], '%H:%M:%S')
+                t_line=row['ELAPSE']
+                if '<' in t_line:
+                    t_line=t_line.replace('<','')
+                time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
             elif row.get('ELAPSE_TIM') is not None:
-                time_obj = datetime.datetime.strptime(row['ELAPSE_TIM'], '%H:%M:%S')
+                t_line=row['ELAPSE_TIM']
+                if '<' in t_line:
+                    t_line=t_line.replace('<','')
+                time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
             else:
                 time_obj = None
             
