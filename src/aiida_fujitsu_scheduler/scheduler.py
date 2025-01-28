@@ -301,10 +301,10 @@ class FujitsuScheduler(Scheduler):
             header_copy=deepcopy(headers)
             tmp_dict={}
             for i in range(len((headers))):
-                header=header_copy.pop()
-                v=vals.pop()
+                header=header_copy.pop(0)
+                v=vals.pop(0)
                 if header == "START_DATE":
-                    v += " " + vals.pop()
+                    v += " " + vals.pop(0)
                 tmp_dict[header]=v
             jobdata_raw.append(tmp_dict)
 
@@ -341,7 +341,10 @@ class FujitsuScheduler(Scheduler):
                     setattr(this_job, value, '')
             
             if row.get('START_DATE') is not None:
-                time_obj = datetime.datetime.strptime(row['START_DATE'], '%m/%d %H:%M:%S')
+                t_line=row['START_DATE']
+                if '<' in t_line:
+                    t_line.replace('<','')
+                time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M:%S')
                 this_year=datetime.datetime.now().year
                 this_job.dispatch_time = time_obj.replace(year=this_year)
             else:
