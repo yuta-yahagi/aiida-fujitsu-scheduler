@@ -320,9 +320,9 @@ class FujitsuScheduler(Scheduler):
                 raise SchedulerParsingError(f'Error parsing the output of the scheduler (job_id): {row}')
 
             if row.get('STATUS') is not None:
-                this_job.job_state = row['STATUS']
+                this_job.job_state = _MAP_SCHEDULER_AIIDA_STATUS[row['STATUS']]
             elif row.get('ST') is not None:
-                this_job.job_state = row['ST']
+                this_job.job_state = _MAP_SCHEDULER_AIIDA_STATUS[row['ST']]
             else:
                 this_job.job_state = JobState.UNDETERMINED
                 self.logger.warning(f'Failed to parse STATUS/ST -> set to UNDETERMINED')
@@ -344,9 +344,12 @@ class FujitsuScheduler(Scheduler):
                 t_line=row['START_DATE']
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
-                time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M:%S')
-                this_year=datetime.datetime.now().year
-                this_job.dispatch_time = time_obj.replace(year=this_year)
+                try:
+                    time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M:%S')
+                    this_year=datetime.datetime.now().year
+                    this_job.dispatch_time = time_obj.replace(year=this_year)
+                except ValueError:
+                    raise ValueError(f"Failed to parse START_DATE string {row['START_DATE']}")
             else:
                 self.logger.info('Failed to parse START_DATE -> set to None')
                 this_job.dispatch_time = None
@@ -355,12 +358,18 @@ class FujitsuScheduler(Scheduler):
                 t_line=row['ELAPSE']
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
-                time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
+                try:
+                    time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
+                except ValueError:
+                    raise ValueError(f"Failed to parse ELAPSE string {row['ELAPSE']}")
             elif row.get('ELAPSE_TIM') is not None:
                 t_line=row['ELAPSE_TIM']
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
-                time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
+                try:
+                        time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
+                except ValueError:
+                    raise ValueError(f"Failed to parse ELAPSE_TIM string {row['ELAPSE_TIM']}")
             else:
                 time_obj = None
             
@@ -372,7 +381,11 @@ class FujitsuScheduler(Scheduler):
                 this_job.wallclock_time_seconds = None
 
             if row.get('NODE') is not None:
-                this_job.num_machines = int(row['NODE'])
+                if row['NODE'].isdigit():
+                    this_job.num_machines = int(row['NODE'])
+                else:
+                    nodenum=re.split(r'\D+', row['NODE'])[0]
+                    this_job.num_machines = int(nodenum)
             else:
                 self.logger.info('Failed to parse NODE -> set to None')
                 this_job.num_machines = None
