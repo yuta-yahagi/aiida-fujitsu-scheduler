@@ -345,7 +345,11 @@ class FujitsuScheduler(Scheduler):
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
                 try:
-                    time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M:%S')
+                    # count num of : in the string
+                    if t_line.count(':') == 1:
+                        time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M')
+                    else:
+                        time_obj = datetime.datetime.strptime(t_line, '%m/%d %H:%M:%S')
                     this_year=datetime.datetime.now().year
                     this_job.dispatch_time = time_obj.replace(year=this_year)
                 except ValueError:
