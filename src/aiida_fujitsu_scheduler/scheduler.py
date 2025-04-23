@@ -344,6 +344,9 @@ class FujitsuScheduler(Scheduler):
                 t_line=row['START_DATE']
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
+                if '(' in t_line:
+                    t_line=t_line.replace('(','')
+                    t_line=t_line.replace(')','')
                 try:
                     # count num of : in the string
                     if t_line.count(':') == 1:
@@ -362,6 +365,9 @@ class FujitsuScheduler(Scheduler):
                 t_line=row['ELAPSE']
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
+                if '(' in t_line:
+                    t_line=t_line.replace('(','')
+                    t_line=t_line.replace(')','')
                 try:
                     time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
                 except ValueError:
@@ -370,6 +376,9 @@ class FujitsuScheduler(Scheduler):
                 t_line=row['ELAPSE_TIM']
                 if '<' in t_line:
                     t_line=t_line.replace('<','')
+                if '(' in t_line:
+                    t_line=t_line.replace('(','')
+                    t_line=t_line.replace(')','')
                 try:
                         time_obj = datetime.datetime.strptime(t_line, '%H:%M:%S')
                 except ValueError:
